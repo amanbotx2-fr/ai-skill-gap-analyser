@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPilot AI</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- ============================= -->
+    <!-- VIEW 1 — ONBOARDING WIZARD    -->
+    <!-- ============================= -->
+
+    <div id="onboarding-view" class="onboarding-view">
+        <div class="onboarding-card">
+            <div class="onboarding-brand">EduPilot <span>AI</span></div>
+
+            <!-- Step 1 -->
+            <div class="step active" data-step="1">
+                <div class="step-indicator">Step 1 of 4</div>
+                <h2>What exam are you preparing for?</h2>
+                <p>Enter your subject or exam name to personalise your roadmap.</p>
+                <input type="text" id="exam_name" placeholder="e.g. Data Structures & Algorithms" required>
+                <button class="next-btn" data-next="2">Next Step →</button>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="step" data-step="2">
+                <div class="step-indicator">Step 2 of 4</div>
+                <h2>Paste your syllabus</h2>
+                <p>We'll parse your syllabus into topics and build a study plan.</p>
+                <textarea id="syllabus_text" rows="6"
+                    placeholder="e.g. Unit 1: Arrays, Linked Lists, Stacks Unit 2: Trees, Graphs, Hashing"
+                    required></textarea>
+                <div class="step-actions">
+                    <button class="back-btn" data-back="1">← Back</button>
+                    <button class="next-btn" data-next="3">Next Step →</button>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="step" data-step="3">
+                <div class="step-indicator">Step 3 of 4</div>
+                <h2>When is your exam?</h2>
+                <p>We'll calculate the optimal daily workload.</p>
+                <input type="date" id="exam_date" required>
+                <div class="step-actions">
+                    <button class="back-btn" data-back="2">← Back</button>
+                    <button class="next-btn" data-next="4">Next Step →</button>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step" data-step="4">
+                <div class="step-indicator">Step 4 of 4</div>
+                <h2>How many hours can you study daily?</h2>
+                <p>Be realistic — consistency beats intensity.</p>
+                <input type="number" id="hours_per_day" min="1" max="12" placeholder="e.g. 4" required>
+                <div class="step-actions">
+                    <button class="back-btn" data-back="3">← Back</button>
+                    <button class="next-btn" id="generate-btn">Generate Roadmap →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================= -->
+    <!-- VIEW 2 — DASHBOARD            -->
+    <!-- ============================= -->
+
+    <div id="dashboard-view" class="dashboard-view hidden">
+
+        <!-- Top Navbar -->
+        <nav class="top-nav">
+            <div class="nav-left">
+                <span class="nav-brand">EduPilot <span>AI</span></span>
+                <a href="#" class="nav-link active">Dashboard</a>
+                <a href="#" class="nav-link">Roadmap</a>
+            </div>
+            <div class="nav-right">
+                <input type="text" class="search-input" placeholder="Search topics..." disabled>
+                <button id="new-plan-btn" class="new-plan-btn">+ New Plan</button>
+            </div>
+        </nav>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+
+            <!-- LEFT COLUMN (70%) -->
+            <main class="main-column">
+                <h1 id="roadmap-title">Your Study Roadmap</h1>
+
+                <!-- Strategy Insight -->
+                <div id="strategy-card" class="card strategy-card hidden">
+                    <div class="card-badge">AI Strategy Insight</div>
+                    <p id="strategy-text"></p>
+                </div>
+
+                <!-- Timeline Roadmap -->
+                <div id="roadmap-timeline" class="roadmap-timeline"></div>
+            </main>
+
+            <!-- RIGHT COLUMN (30%) -->
+            <aside class="sidebar-column">
+
+                <!-- Progress Card -->
+                <div id="progress-card" class="card progress-card hidden">
+                    <h3>Study Progress</h3>
+                    <div class="progress-ring-container">
+                        <span id="progress-pct" class="progress-pct">0%</span>
+                    </div>
+                    <div class="progress-bar-track">
+                        <div class="progress-bar-fill" id="progress-fill"></div>
+                    </div>
+                    <span id="progress-label" class="progress-label">0 of 0 tasks complete</span>
+                </div>
+
+                <!-- Burnout Risk Card -->
+                <div id="risk-card-panel" class="card risk-card-panel hidden">
+                    <h3>Burnout Risk</h3>
+                    <span id="risk-value" class="risk-badge"></span>
+                </div>
+
+                <!-- Mentor Advice Card -->
+                <div id="advice-card-panel" class="card advice-card-panel hidden">
+                    <h3>Mentor Advice</h3>
+                    <p id="mentor-text"></p>
+                </div>
+
+                <!-- Ask Follow-up (static placeholder) -->
+                <div class="card followup-card">
+                    <h3>Ask a Follow-up</h3>
+                    <input type="text" class="followup-input" placeholder="e.g. How to study Trees?" disabled>
+                    <span class="coming-soon-tag">Coming Soon</span>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

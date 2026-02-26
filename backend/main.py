@@ -1,5 +1,5 @@
 """
-main.py — AI Skill Gap Analyser · FastAPI Backend
+main.py — EduPilot AI · FastAPI Backend
 Run with: uvicorn main:app --reload
 """
 
@@ -7,6 +7,8 @@ import joblib
 import numpy as np
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
+from fastapi.middleware.cors import CORSMiddleware
+import roadmap  # noqa: F401  — EduPilot AI roadmap module (scaffold)
 
 # ─────────────────────────────────────────────
 # STARTUP: Load trained model
@@ -32,6 +34,15 @@ app = FastAPI(
     description="Analyses student quiz performance and returns a personalised learning roadmap.",
     version="1.0.0",
 )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 # ─────────────────────────────────────────────
 # PYDANTIC REQUEST MODEL
@@ -174,3 +185,38 @@ def analyze(quiz: QuizInput):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
+
+
+# =============================
+# EduPilot AI - Roadmap Module
+# =============================
+
+class RoadmapRequest(BaseModel):
+    """Incoming data for exam roadmap generation."""
+    syllabus_text: str = Field(..., description="Full syllabus text split by Units")
+    exam_date:     str = Field(..., description="Exam date in YYYY-MM-DD format")
+    hours_per_day: int = Field(..., ge=1, description="Hours available for study per day")
+
+    model_config = {
+        "json_schema_extra": {
+            "example": {
+                "syllabus_text": "Unit 1: Arrays, Linked Lists, Stacks Unit 2: Trees, Graphs",
+                "exam_date": "2026-04-15",
+                "hours_per_day": 4,
+            }
+        }
+    }
+
+
+@app.post("/generate-roadmap", tags=["Roadmap"])
+def generate_roadmap(req: RoadmapRequest):
+    """Generate a day-wise study plan from syllabus text and exam date."""
+    try:
+        plan = roadmap.generate_study_plan(
+            syllabus_text=req.syllabus_text,
+            exam_date=req.exam_date,
+            hours_per_day=req.hours_per_day,
+        )
+        return plan
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Roadmap generation failed: {str(e)}")
